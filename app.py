@@ -1,10 +1,12 @@
-from core.filesystem.listFiles import *
+#Imports
+
+import curses
+
+from interface.handler import *
 
 
-while True:
-    path = input("Digite o diretório:")
+# Running the interface
 
-    files = getFiles(path)
+curses.wrapper(main)
 
-    for item in files:
-        print
+
