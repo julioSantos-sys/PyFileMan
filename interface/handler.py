@@ -4,7 +4,9 @@ import curses
 import os
 
 from interface.add_path_bar import addPathBar
+from interface.add_label import addLabel
 from interface.listFiles import listFiles, printFile
+from interface.navigating import moveDown, moveUp
 
 def main(stdscr):
 
@@ -15,15 +17,20 @@ def main(stdscr):
     curses.start_color()
     curses.use_default_colors()
 
-    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE) # Highlight
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE) # Highlight blue
     curses.init_pair(2, curses.COLOR_BLUE, -1) # Directories 
     curses.init_pair(3, curses.COLOR_GREEN, -1) # binaries files
+    curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_RED) # Highlight red
+
+    curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_YELLOW) # Highlighted directories
+    curses.init_pair(5, curses.COLOR_GREEN, curses.COLOR_YELLOW) # Highlighted binaries
+    curses.init_pair(6, curses.COLOR_WHITE, curses.COLOR_YELLOW) # Highlighted text files
 
      # Cleaning the screen
 
     stdscr.clear()
 
-    # Get current path
+    # Getting current path
 
     # path = os.getcwd()
 
@@ -33,12 +40,34 @@ def main(stdscr):
 
     addPathBar(stdscr, path)
 
+    # Adding label
+
+    addLabel(stdscr)
+
     # Printing files in the screen
 
-    listFiles(stdscr, path)
-
+    listFiles(stdscr, path, highlightFirstItem=1)
 
     stdscr.refresh()
+
+    stdscr.keypad(True)
+
+    h, w = stdscr.getmaxyx()
+
+    max_visible_rows = h - 2
+
+    currentListPos = 0
+    row = 1
+    firstFile = 0
+    stdscr.refresh()
+
+    while True:
+        pressedKey = stdscr.getch()
+
+        if pressedKey == curses.KEY_DOWN:
+            currentListPos, row, firstFile = moveDown(stdscr, currentListPos, max_visible_rows, row, path, firstFile)
+        elif pressedKey == curses.KEY_UP:
+            currentListPos, row, firstFile = moveUp(stdscr, currentListPos, max_visible_rows, row, path, firstFile)
     
     stdscr.getch()
 
