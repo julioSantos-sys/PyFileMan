@@ -75,7 +75,8 @@ def listFiles(screen, path, startFrom=0, highlightFirstItem=0):
 
 
     if highlightFirstItem == 1:
-        printFile(screen, file=files[0], row=1, highlight=1)
+        if (len(files) > 0):
+            printFile(screen, file=files[0], row=1, highlight=1)
             
     
 
