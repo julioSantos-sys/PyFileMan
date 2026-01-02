@@ -48,7 +48,9 @@ def printFile(screen, file, row, highlight=0):
 
 
 def listFiles(screen, path, startFrom=0, highlightFirstItem=0):
-    h, w = h, w = screen.getmaxyx()
+    
+
+    h, w = screen.getmaxyx()
 
     currentRow = 1
 
@@ -65,6 +67,12 @@ def listFiles(screen, path, startFrom=0, highlightFirstItem=0):
         if currentRow < h-1:
             printFile(screen, file, currentRow)
             currentRow = currentRow + 1
+    if currentRow < h-1:
+        for i in range(currentRow, h-1):
+            screen.addstr(currentRow,0, " " * w)
+            currentRow = currentRow + 1
+
+
 
     if highlightFirstItem == 1:
         printFile(screen, file=files[0], row=1, highlight=1)

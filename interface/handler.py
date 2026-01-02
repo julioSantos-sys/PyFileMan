@@ -7,6 +7,7 @@ from interface.add_path_bar import addPathBar
 from interface.add_label import addLabel
 from interface.listFiles import listFiles, printFile
 from interface.navigating import moveDown, moveUp
+from core.filesystem.changeDirectory import goBack, goForward
 
 def main(stdscr):
 
@@ -32,9 +33,7 @@ def main(stdscr):
 
     # Getting current path
 
-    # path = os.getcwd()
-
-    path = '/home/raskolnikov'
+    path = os.getcwd()
 
     # Adding path bar
 
@@ -62,12 +61,31 @@ def main(stdscr):
     stdscr.refresh()
 
     while True:
+        
         pressedKey = stdscr.getch()
 
         if pressedKey == curses.KEY_DOWN:
             currentListPos, row, firstFile = moveDown(stdscr, currentListPos, max_visible_rows, row, path, firstFile)
         elif pressedKey == curses.KEY_UP:
             currentListPos, row, firstFile = moveUp(stdscr, currentListPos, max_visible_rows, row, path, firstFile)
+        elif pressedKey == curses.KEY_LEFT:
+            path = goBack(path)
+            currentListPos = 0
+            row = 1
+            firstFile = 0
+            listFiles(stdscr, path, highlightFirstItem=1)
+            addPathBar(stdscr, path)
+        elif pressedKey == curses.KEY_RIGHT:
+            response = goForward(path, currentListPos)
+            if (response != 0):
+                path = response
+                currentListPos = 0
+                row = 1
+                firstFile = 0
+                listFiles(stdscr, path, highlightFirstItem=1)
+                addPathBar(stdscr, path)
+        
+        stdscr.refresh()
     
     stdscr.getch()
 
