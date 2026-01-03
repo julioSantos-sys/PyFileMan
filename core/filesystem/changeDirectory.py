@@ -1,5 +1,4 @@
 import os
-from core.filesystem.getFilesList import getFiles
 
 def goBack(path):
 
@@ -7,9 +6,7 @@ def goBack(path):
     
     return path
 
-def goForward(path, itemPos):
-
-    files = getFiles(path)
+def goForward(path, itemPos, files):
 
     file = files[itemPos]
 

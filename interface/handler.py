@@ -8,6 +8,7 @@ from interface.add_label import addLabel
 from interface.listFiles import listFiles, printFile
 from interface.navigating import moveDown, moveUp
 from core.filesystem.changeDirectory import goBack, goForward
+from core.filesystem.getFilesList import getFiles
 
 def main(stdscr):
 
@@ -34,6 +35,7 @@ def main(stdscr):
     # Getting current path
 
     path = os.getcwd()
+    filesCurrentDir = getFiles(path=path)
 
     # Adding path bar
 
@@ -45,7 +47,7 @@ def main(stdscr):
 
     # Printing files in the screen
 
-    listFiles(stdscr, path, highlightFirstItem=1)
+    listFiles(stdscr, path, highlightFirstItem=1, files=filesCurrentDir)
 
     stdscr.refresh()
 
@@ -65,24 +67,26 @@ def main(stdscr):
         pressedKey = stdscr.getch()
 
         if pressedKey == curses.KEY_DOWN:
-            currentListPos, row, firstFile = moveDown(stdscr, currentListPos, max_visible_rows, row, path, firstFile)
+            currentListPos, row, firstFile = moveDown(stdscr, currentListPos, max_visible_rows, row, path, firstFile, filesCurrentDir)
         elif pressedKey == curses.KEY_UP:
-            currentListPos, row, firstFile = moveUp(stdscr, currentListPos, max_visible_rows, row, path, firstFile)
+            currentListPos, row, firstFile = moveUp(stdscr, currentListPos, max_visible_rows, row, path, firstFile, filesCurrentDir)
         elif pressedKey == curses.KEY_LEFT:
             path = goBack(path)
             currentListPos = 0
             row = 1
             firstFile = 0
-            listFiles(stdscr, path, highlightFirstItem=1)
+            filesCurrentDir = getFiles(path=path)
+            listFiles(stdscr, path, highlightFirstItem=1, files=filesCurrentDir)
             addPathBar(stdscr, path)
         elif pressedKey == curses.KEY_RIGHT:
-            response = goForward(path, currentListPos)
+            response = goForward(path, currentListPos, filesCurrentDir)
             if (response != 0):
                 path = response
                 currentListPos = 0
                 row = 1
                 firstFile = 0
-                listFiles(stdscr, path, highlightFirstItem=1)
+                filesCurrentDir = getFiles(path=path)
+                listFiles(stdscr, path, highlightFirstItem=1, files=filesCurrentDir)
                 addPathBar(stdscr, path)
         
         stdscr.refresh()

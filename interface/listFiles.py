@@ -1,7 +1,6 @@
 # Imports
 
 import curses
-from core.filesystem.getFilesList import getFiles
 
 def printFile(screen, file, row, highlight=0):
 
@@ -47,7 +46,7 @@ def printFile(screen, file, row, highlight=0):
             screen.attroff(curses.color_pair(6))
 
 
-def listFiles(screen, path, startFrom=0, highlightFirstItem=0):
+def listFiles(screen, path, startFrom=0, highlightFirstItem=0, files=1):
     
 
     h, w = screen.getmaxyx()
@@ -55,8 +54,6 @@ def listFiles(screen, path, startFrom=0, highlightFirstItem=0):
     currentRow = 1
 
     # Getting files list
-
-    files = getFiles(path)
 
     if startFrom !=0:
         files = files[startFrom:]
